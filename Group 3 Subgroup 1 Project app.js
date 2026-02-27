@@ -16,8 +16,11 @@ app.get("/expenses/all", (req, res) => {
 app.post("/expenses/:id", (req, res) => {
     const newExpenses = {id: expenses.length + 1, ...req.body};
     expenses.push(newExpenses);
-    if (!newExpenses.)
-})
+    if (!newExpenses.date || !newExpenses.amount || !newExpenses.category) {
+        return res.status(400).json({error: "Missing required fields"});
+    }
+    res.status(201).json(newExpenses);
+});
 //To update
 
 //To delete
