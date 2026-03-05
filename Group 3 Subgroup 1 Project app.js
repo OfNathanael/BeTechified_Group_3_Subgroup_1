@@ -1,5 +1,6 @@
-require("dotenv").config();
-const express = require("express");
+require("dotenv").config(); //This line loads environment variables from a .env file into process.env, allowing you to use environment-specific configurations without hardcoding them in your code. In this case, it is used to access the port number for the server from an environment variable.
+
+const express = require("express"); //
 const app = express();
 const port = process.env.port;
 
@@ -9,26 +10,26 @@ let expenses = [
   { id: 1, date: "27-02-2026", amount: "$10", category: "Utility" },
   { id: 2, date: "27-02-2026", amount: "$5.65", category: "Food" },
   { id: 3, date: "02-03-2026", amount: "$500", category: "Gadget Purchase" },
-];
+]; //In-memory data store for expenses, initialized with some sample data. Each expense has an id, date, amount, and category. This array serves as a simple database for the application, allowing us to perform CRUD operations on the expenses without needing a separate database setup.
 
 //To list all expenses
 app.get("/expenses/all", (req, res) => {
   res.status(200).json(expenses);
-});
+}); //This route handler listens for GET requests to the "/expenses/all" endpoint and responds with a JSON array of all expenses. It uses the res.status(200) method to set the HTTP status code to 200 (OK) and res.json(expenses) to send the expenses data as a JSON response. This allows clients to retrieve the complete list of expenses stored in the server.
 
 //To get specific expense by id
 app.get("/expenses/:id", (req, res) => {
   const expense = expenses.find((e) => e.id === parseInt(req.params.id));
   if (!expense) return res.status(404).json({ error: "Expense not found." });
   res.status(200).json(expense);
-});
+}); //This route handler listens for GET requests to the "/expenses/:id" endpoint, where ":id" is a placeholder for the expense ID. It uses the find method to search for an expense with the matching ID in the expenses array. If no expense is found, it responds with a 404 status code and an error message. If an expense is found, it responds with a 200 status code and the expense data in JSON format. This allows clients to retrieve specific expenses by their unique IDs.
 
 //To get expenses by date
 app.get("/expenses/date/:date", (req, res) => {
   const expensebyDate = expenses.filter((e) => e.date === req.params.date);
-  if (!expensebyDate) return res.status(404).json({ error: "No expenses found for the given date." });
+  if (!expensebyDate || expensebyDate.length === 0) return res.status(404).json({ error: "No expenses found for the given date." });
   res.status(200).json(expensebyDate);
-});
+}); //This route handler listens for GET requests to the "/expenses/date/:date" endpoint, where ":date" is a placeholder for the date of the expenses. It uses the filter method to create an array of expenses that match the specified date. If no expenses are found for that date, it responds with a 404 status code and an error message. If expenses are found, it responds with a 200 status code and the array of expenses in JSON format. This allows clients to retrieve all expenses that occurred on a specific date.
 
 //To add
 app.post("/expenses", (req, res) => {
