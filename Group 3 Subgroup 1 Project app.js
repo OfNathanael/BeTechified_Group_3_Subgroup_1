@@ -32,12 +32,17 @@ app.get("/expenses/date/:date", (req, res) => {
 
 //To add
 app.post("/expenses", (req, res) => {
-    const newExpense = { id: expenses.length + 1, ...req.body };
-    expenses.push(newExpense);
-    if (!newExpense.date || !newExpense.amount || !newExpense.category) {
-        return res.status(400).json({error: "Missing required fields. Date, amount, and category are required."});
-    };
-    res.status(201).json(newExpense);
+  const { date, amount, category } = req.body;
+
+  if (!date || !amount || !category)
+    return res.status(400).json({ error: "All fields required" });
+
+  if (isNaN(parseFloat(amount.replace("$",""))))
+    return res.status(400).json({ error: "Amount must be a number" });
+
+  const newExpense = { id: expenses.length + 1, date, amount, category };
+  expenses.push(newExpense);
+  res.status(201).json(newExpense);
 });
 
 //To update
